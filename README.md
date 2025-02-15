@@ -21,7 +21,7 @@ Our project focuses on applying IT project management principles to deliver a pr
 - Deliver a functional prototype with detailed documentation.  
 
 ## 👥 **Team Members**  
-- [Your Name] (Team Lead)  
-- [Member 2 Name]  
-- [Member 3 Name]  
-- [Member 4 Name]  
+- Bandara L.P.B.R.(IT22564122)
+- Udesha S.M.S.(IT22586902)
+- Niwanthika M.A.H.(IT22570758)
+- Liyanahetti L.H.R.S.D.(IT22592088)
