@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import UserModel from '../models/userModel.js';
 import generateMailTransporter from '../config/nodemailer.js';
 
+//register
 export const register = async (req, res) => {
     const { name, email, password } = req.body;
 
@@ -50,7 +51,7 @@ export const register = async (req, res) => {
         return res.json({ success: false, message: err.message });
     }
 };
-
+//login 
 export const login = async (req, res) => {
     const { email, password } = req.body;
 
@@ -86,7 +87,7 @@ export const login = async (req, res) => {
         return res.json({ success: false, message: error.message });
     }
 };
-
+//logout 
 export const logout = async (req, res) => {
     try {
         res.clearCookie('token', {
@@ -100,3 +101,72 @@ export const logout = async (req, res) => {
         return res.json({ success: false, message: error.message });
     }
 };
+
+//send Verification OTP to User's Email
+export const sendVerifyOtp = async (req, res) => {
+    try {
+        const { userId } = req.body;
+
+        const user = await UserModel.findById(userId);
+
+        if (user.isAccountVerified) {
+            return res.json({ success: false, message: "Account Already verified" });
+        }
+
+        const otp = String(Math.floor(100000 + Math.random() * 900000));
+
+        user.verifyotp = otp;
+        user.verify0tpExpireAt = Date.now() + 24 * 60 * 60 * 1000;
+
+        await user.save();
+
+        const transporter = generateMailTransporter(); // Create the transporter object
+
+        const mailOptions = {
+            from: process.env.SENDER_EMAIL,
+            to: user.email,
+            subject: 'Account Verification OTP',
+            text: `Your account verification code is: ${otp}.
+Please enter this code on the website to complete your registration.
+If you didn't request this, please ignore this message.`,
+        };
+
+        await transporter.sendMail(mailOptions);
+
+        res.json({ success: true, message: "Your OTP has been sent. Check your email to verify your account." });
+
+    } catch (error) {
+        res.json({ success: false, message: error.message });
+    }
+};
+
+export const verifiedEmail = async (req, res) => {
+    const { userId, otp } = req.body;
+
+    if (!userId || !otp) {
+        return res.json({ success: false, message: 'Missing Details' });
+    }
+    try {
+        const user = await UserModel.findById(userId);
+
+        if (!user) {
+            return res.json({ success: false, message: 'User not found' });
+        }
+        if (user.verifyotp === '' || user.verifyotp !== otp) {
+            return res.json({ success: false, message: 'Invalied OTP' });
+        }
+        if(user.verify0tpExpireAt < Date.now()){
+            return res.json({ success: false, message: 'OTP Expired' });
+        }
+        user.isAccountVerified = true;
+        user.verifyotp = '';
+        user.verify0tpExpireAt = 0;
+
+        await user.save();
+        return res.json({ success: true, message: 'Email verified successfully' });
+    
+
+    } catch {
+        res.json({ success: false, message: error.message });
+    }
+}
