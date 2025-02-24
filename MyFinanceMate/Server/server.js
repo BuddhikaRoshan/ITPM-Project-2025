@@ -4,6 +4,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import authRouter from './routes/authRoutes.js';
+import userRouter from './routes/userRoutes.js';
 
 // Load environment variables
 dotenv.config();
@@ -27,8 +28,9 @@ mongoose.connect(URL)
   });
 
 // Routes
-app.get("/", (req, res) => res.send("Welcome to MyFinanceMate API!"));
+app.get('/', (req, res) => res.send("Welcome to MyFinanceMate API!"));
 app.use('/api/auth', authRouter);
+app.use('/api/user', userRouter);
 
 // Start Server
 app.listen(PORT, () => {
