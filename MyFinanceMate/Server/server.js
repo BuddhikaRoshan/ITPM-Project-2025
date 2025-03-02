@@ -32,6 +32,14 @@ app.get('/', (req, res) => res.send("Welcome to MyFinanceMate API!"));
 app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
 
+
+const incomeRouter=require("./routes/incomeRoutes.js");
+app.use("/income",incomeRouter);
+
+
+
+
+
 // Start Server
 app.listen(PORT, () => {
   console.log(`Server is up and running on port number: ${PORT}`);
