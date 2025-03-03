@@ -25,10 +25,31 @@ router.route("/add").post((req,res)=>{
     })
 
 })
-
+/*display income */
 router.route("/").get((req,res)=>{
+    Income.find().then((income)=>{
+        res.json(income)
+    }).catch((err)=>{
+        console.log(err);
+    })
+})
+/*update income */
+router.route("/update/:id").put(async(req,res)=>{
+    let userId=req.params.id;/*fetch id*/
+    const{description,amount,date,total_income}=req.body;
+
+    const updateStudent={
+        description,
+        amount,
+        date,
+        total_income
+    }
+    /*to check user and update*/
+    const update=await Income.findByIdAndUpdate(userId,updateStudent);
     
 })
+
+
 
 
 
