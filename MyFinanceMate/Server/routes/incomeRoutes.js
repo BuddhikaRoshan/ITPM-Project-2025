@@ -48,15 +48,28 @@ router.route("/update/:id").put(async(req,res)=>{
     const update=await Income.findByIdAndUpdate(userId,updateStudent);
     
 })
+/*delete income*/
+router.route("/delete/id").delete(async(req,res)=>{
+    let userId=req.params.id;
+    await Income.findByIdAndDelete(userId)
+    .then(()=>{
+        res.status(200).send({status:"Income deleted"});
+    }).catch((err)=>{
+        console.log(err.message);
+        res.status(500).send({status:"Error with delete income",error:err.message});
+    })
+})
 
-
-
-
-
-
-
-
-
-
+/*get one income records */
+router.route("/get/:id").get(async(req,res)=>{
+    let userId=req.params.id;
+    const user=await Income.findById(userId)
+    .then((income)=>{
+        res.status(200).send({status:"Income fetched",income})
+    }).catch((err)=>{
+        console.log(err.message);
+        res.status(500).send({status:"Error with get income",error:err.message});
+    })
+})
 
 module.exports=router;
