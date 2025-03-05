@@ -12,8 +12,10 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 4000;
 
+const allowedOrigins =['http://localhost:5173']
+
 // Middleware
-app.use(cors());
+app.use(cors({origin:allowedOrigins,credentials:true}));
 app.use(express.json());
 app.use(cookieParser());
 
@@ -32,15 +34,25 @@ app.get('/', (req, res) => res.send("Welcome to MyFinanceMate API!"));
 app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
 
+// Start Server with port fallback
+const startServer = (port) => {
+  try {
+    const server = app.listen(port, () => {
+      console.log(`Server is up and running on port number: ${port}`);
+    });
+    
+    server.on('error', (error) => {
+      if (error.code === 'EADDRINUSE') {
+        console.log(`Port ${port} is already in use, trying port ${port + 1}`);
+        startServer(port + 1);
+      } else {
+        console.error('Server error:', error);
+      }
+    });
+  } catch (error) {
+    console.error('Failed to start server:', error);
+  }
+};
 
-const incomeRouter=require("./routes/incomeRoutes.js");
-app.use("/income",incomeRouter);
-
-
-
-
-
-// Start Server
-app.listen(PORT, () => {
-  console.log(`Server is up and running on port number: ${PORT}`);
-});
+// Start the server on the initial port
+startServer(PORT);

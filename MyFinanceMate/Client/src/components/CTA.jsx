@@ -1,0 +1,14 @@
+import React from 'react';
+const CTA = () => (
+  <section className="py-20 bg-gray-900  text-white text-center">
+    <h2 className="text-4xl font-bold mb-4">Start Your AI Finance Journey Today</h2>
+    <p className="text-lg max-w-2xl mx-auto text-gray-200 mb-6">
+      Join thousands who are optimizing their finances with AI-powered insights.
+    </p>
+    <button className="bg-white text-green-700 px-8 py-4 rounded-full text-lg font-semibold hover:bg-gray-200 transition-all">
+      Get Started
+    </button>
+  </section>
+);
+
+export default CTA;
