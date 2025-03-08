@@ -40,7 +40,7 @@ const Login = () => {
           // Handle successful login
           setIsLoggedin(true);
           getUserData();
-          navigate('/');
+          navigate('/chatbot'); // Redirect to /chatbot after login
         }
       } else {
         toast.error(data.message);

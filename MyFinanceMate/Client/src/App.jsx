@@ -4,25 +4,32 @@ import Login from './pages/Login';
 import EmailVerify from './pages/EmailVerify';
 import ResetPassword from './pages/ResetPassword';
 import Home from './pages/Home';
+import Dashboard from './pages/Dashboard';
+import Chatbot from './pages/Chatbot';
+import Calendar from './pages/Calendar';
+import Settings from './pages/Settings';
+import ProtectedRoute from './components/ProtectedRoute';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './index.css';
-import Dashboard from './pages/Dashboard';
-import ProtectedRoute from './components/ProtectedRoute';
 
 const App = () => {
   return (
     <div>
       <ToastContainer />
       <Routes>
-        <Route path='/' element={<Home />} />
-        <Route path='/login' element={<Login />} />
-        <Route path='/email-verify' element={<EmailVerify />} />
-        <Route path='/reset-password' element={<ResetPassword />} />
+        {/* Public Routes */}
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/email-verify" element={<EmailVerify />} />
 
+        {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/email-verify" element={<EmailVerify />} />
+          <Route path="/chatbot" element={<Chatbot />} />
+          <Route path="/calendar" element={<Calendar />} />
+          <Route path="/settings" element={<Settings />} />
         </Route>
       </Routes>
     </div>
