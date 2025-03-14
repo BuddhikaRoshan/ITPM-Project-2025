@@ -5,6 +5,8 @@ import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { assets } from '../assets/assets';
+import Header from '../components/Header';
+
 
 const Login = () => {
   const navigate = useNavigate();
@@ -51,7 +53,7 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-900 to-indigo-900 flex items-center justify-center relative">
+    <div className="min-h-screen bg-gray-900 flex items-center justify-center relative">
       <ToastContainer position="top-center" />
       <div className="absolute inset-0 bg-opacity-25 bg-black" />
       
@@ -59,7 +61,7 @@ const Login = () => {
         onClick={() => navigate('/')}
         src={assets.logo}
         alt="Logo"
-        className="absolute left-8 top-8 w-36 cursor-pointer filter brightness-0 invert"
+        className="absolute left-8 top-8 w-20 cursor-pointer"
       />
 
       <div className="bg-white p-12 rounded-2xl shadow-2xl max-w-md w-full mx-4 backdrop-blur-lg border border-gray-100">

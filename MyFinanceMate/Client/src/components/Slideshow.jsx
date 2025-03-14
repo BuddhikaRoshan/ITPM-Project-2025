@@ -9,7 +9,7 @@ const HeroSlideshow = () => {
   const { isLoggedin } = useContext(AppContent) || { isLoggedin: false };
 
   const slides = [
-    { video: video1, heading: "Financial Freedom Awaits", text: "AI-powered insights for your finances", cta: "Get Started" },
+    { video: video1, heading: "Financial Freedom Awaits", text: "AI-powered insights for your finances", cta: "Learn More" },
     { video: video2, heading: "Smart Money Management", text: "Real-time tracking meets AI forecasting", cta: "Learn More" }
   ];
 

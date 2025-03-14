@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { FaHome, FaCalendarAlt, FaCog, FaUser, FaSignOutAlt } from "react-icons/fa";
-import { FiSend, FiMic } from "react-icons/fi";  // Add this import
+import { FiSend, FiMic } from "react-icons/fi";
 import { useNavigate, Routes, Route } from "react-router-dom";
-import Footer from "../components/Footer";  // Ensure Footer component exists or remove this
+import Footer from "../components/Footer"; // Make sure to create this component or remove it if not needed
 
 // Page components
 const HomePage = () => <div className="p-8 text-white">Home Page</div>;
@@ -16,18 +16,44 @@ const ChatInterface = () => {
   const [input, setInput] = useState("");
   const [income, setIncome] = useState(0);
   const [expense, setExpense] = useState(0);
-  const [voiceInput, setVoiceInput] = useState("");
+  const [awaitingAmount, setAwaitingAmount] = useState(null); // Tracks if we're waiting for an amount (income/expense)
 
   const botResponse = (userMessage) => {
-    if (userMessage.toLowerCase().includes("hello")) {
+    const lowerCaseMessage = userMessage.toLowerCase();
+
+    if (lowerCaseMessage.includes("hello")) {
       return "Hi there! How can I assist you today? 😊";
     }
-    if (userMessage.toLowerCase().includes("expense")) {
-      return "Please provide the amount for the expense.";
-    }
-    if (userMessage.toLowerCase().includes("income")) {
+
+    if (lowerCaseMessage.includes("income")) {
+      setAwaitingAmount("income");
       return "Please provide the amount for the income.";
     }
+
+    if (lowerCaseMessage.includes("expense")) {
+      setAwaitingAmount("expense");
+      return "Please provide the amount for the expense.";
+    }
+
+    if (awaitingAmount) {
+      const amount = parseFloat(userMessage);
+      if (isNaN(amount)) {
+        return "Please enter a valid number.";
+      }
+
+      if (awaitingAmount === "income") {
+        setIncome((prevIncome) => prevIncome + amount);
+        setAwaitingAmount(null);
+        return `Income updated by $${amount}.`;
+      }
+
+      if (awaitingAmount === "expense") {
+        setExpense((prevExpense) => prevExpense + amount);
+        setAwaitingAmount(null);
+        return `Expense updated by $${amount}.`;
+      }
+    }
+
     return "I'm just a simple chatbot. Ask me anything!";
   };
 
@@ -36,7 +62,7 @@ const ChatInterface = () => {
     const newMessages = [...messages, { text: input, sender: "user" }];
     setMessages(newMessages);
     setInput("");
-    
+
     setTimeout(() => {
       const botReply = botResponse(input);
       setMessages([...newMessages, { text: botReply, sender: "bot" }]);
@@ -51,31 +77,25 @@ const ChatInterface = () => {
 
     const recognition = new window.webkitSpeechRecognition();
     recognition.lang = "en-US";
+    recognition.continuous = false; // Stop after one sentence
+    recognition.interimResults = false; // Only final results
+
     recognition.start();
 
     recognition.onresult = (event) => {
       const voiceMessage = event.results[0][0].transcript;
-      setVoiceInput(voiceMessage);
-      setMessages([...messages, { text: voiceMessage, sender: "user" }]);
-      if (voiceMessage.toLowerCase().includes("expense")) {
-        setMessages([...messages, { text: "Please provide the amount for the expense.", sender: "bot" }]);
-      }
-      if (voiceMessage.toLowerCase().includes("income")) {
-        setMessages([...messages, { text: "Please provide the amount for the income.", sender: "bot" }]);
-      }
+      setInput(voiceMessage); // Update the input field with the voice message
+      handleSendMessage(); // Automatically send the voice message
     };
 
     recognition.onerror = (event) => {
-      console.error(event.error);
+      console.error("Speech recognition error:", event.error);
+      alert("Speech recognition failed. Please try again.");
     };
-  };
 
-  const handleAddExpense = (amount) => {
-    setExpense((prevExpense) => prevExpense + parseFloat(amount));
-  };
-
-  const handleAddIncome = (amount) => {
-    setIncome((prevIncome) => prevIncome + parseFloat(amount));
+    recognition.onend = () => {
+      console.log("Speech recognition ended.");
+    };
   };
 
   return (
@@ -84,11 +104,11 @@ const ChatInterface = () => {
       <div className="flex justify-between mb-4 space-x-4">
         <div className="bg-gradient-to-r from-teal-500 to-blue-600 rounded-lg p-6 w-1/2">
           <div className="text-white text-lg font-semibold">Income</div>
-          <div className="text-3xl mt-2">${income}</div>
+          <div className="text-3xl mt-2">${income.toFixed(2)}</div>
         </div>
         <div className="bg-gradient-to-r from-red-500 to-orange-600 rounded-lg p-6 w-1/2">
           <div className="text-white text-lg font-semibold">Expense</div>
-          <div className="text-3xl mt-2">${expense}</div>
+          <div className="text-3xl mt-2">${expense.toFixed(2)}</div>
         </div>
       </div>
 
@@ -133,6 +153,7 @@ const ChatInterface = () => {
   );
 };
 
+// Main Chatbot Component
 const Chatbot = () => {
   const navigate = useNavigate();
 
@@ -153,19 +174,19 @@ const Chatbot = () => {
       <div className="flex flex-1">
         {/* Left Side Menu */}
         <div className="w-20 bg-gray-800 flex flex-col items-center py-6 space-y-8">
-          <button 
+          <button
             className="p-3 text-white hover:bg-gray-700 rounded-lg"
             onClick={() => navigate('/')}
           >
             <FaHome className="text-2xl" />
           </button>
-          <button 
+          <button
             className="p-3 text-white hover:bg-gray-700 rounded-lg"
             onClick={() => navigate('/calendar')}
           >
             <FaCalendarAlt className="text-2xl" />
           </button>
-          <button 
+          <button
             className="p-3 text-white hover:bg-gray-700 rounded-lg"
             onClick={() => navigate('/settings')}
           >
@@ -173,15 +194,15 @@ const Chatbot = () => {
           </button>
 
           {/* Profile and Logout Buttons */}
-          <button 
+          <button
             className="p-3 text-white hover:bg-gray-700 rounded-lg mt-auto"
             onClick={() => navigate('/profile')}
           >
             <FaUser className="text-2xl" />
           </button>
-          <button 
+          <button
             className="p-3 text-white hover:bg-gray-700 rounded-lg"
-            onClick={logout} // Attach logout function here
+            onClick={logout}
           >
             <FaSignOutAlt className="text-2xl" />
           </button>

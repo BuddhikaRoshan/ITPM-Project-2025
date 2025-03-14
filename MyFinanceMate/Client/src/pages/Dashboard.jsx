@@ -38,7 +38,7 @@ const Dashboard = () => {
         <Header />
         <main className="flex-grow flex items-center justify-center">
           <div className="text-center">
-            <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full text-blue-600" role="status">
+            <div className="spinner-border animate-spin inline-block w-7 h-7 border-4 rounded-full text-blue-600" role="status">
               <span className="visually-hidden">Loading...</span>
             </div>
             <p className="mt-2">Loading dashboard...</p>

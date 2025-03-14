@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-
+import logo from '../assets/logo.png';
 import Footer from '../components/Footer';
 
 const Calendar = () => {
+
   const [payments, setPayments] = useState([]);
   const [newPayment, setNewPayment] = useState({
     description: '',
@@ -29,6 +30,8 @@ const Calendar = () => {
       [name]: value
     });
   };
+
+
 
   const handleAddPayment = () => {
     if (newPayment.description && newPayment.amount && newPayment.date) {
@@ -183,10 +186,14 @@ const Calendar = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
-
-      <main className="flex-grow container mx-auto p-6">
-        <h1 className="text-3xl font-bold mb-6">Payment Calendar</h1>
+    <div className="min-h-screen bg-gray-900  flex flex-col">
+          <main className="flex-grow container mx-auto p-6">
+ <div className="flex justify-center py-4">
+        <img src={logo} alt="Logo" className="h-16" />
+        <h1 className="text-3xl text-white font-bold mb-6">Payment Calendar</h1>
+      </div>
+  
+  
         
         <div className="max-w-4xl mx-auto mb-8">
           <div className="bg-white p-6 rounded-lg shadow-md mb-8">
@@ -362,11 +369,15 @@ const Calendar = () => {
                 No payments added yet. Add your first payment above.
               </div>
             )}
+            
           </div>
+          
         </div>
+        
       </main>
 
     </div>
+    
   );
 };
 

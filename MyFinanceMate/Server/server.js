@@ -10,9 +10,9 @@ import userRouter from './routes/userRoutes.js';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 4000
 
-const allowedOrigins =['http://localhost:5173']
+const allowedOrigins =['http://localhost:5176']
 
 // Middleware
 app.use(cors({origin:allowedOrigins,credentials:true}));

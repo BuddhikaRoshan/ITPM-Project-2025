@@ -8,6 +8,7 @@ import Dashboard from './pages/Dashboard';
 import Chatbot from './pages/Chatbot';
 import Calendar from './pages/Calendar';
 import Settings from './pages/Settings';
+import AboutUs from './pages/AboutUs';
 import ProtectedRoute from './components/ProtectedRoute';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -23,6 +24,7 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/email-verify" element={<EmailVerify />} />
+        <Route path="/about" element={<AboutUs />} />
 
         {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>

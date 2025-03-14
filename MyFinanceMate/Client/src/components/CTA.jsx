@@ -18,7 +18,7 @@ const CTA = () => {
       </p>
       <button 
         onClick={handleGetStarted} 
-        className="bg-white text-green-700 px-8 py-4 rounded-full text-lg font-semibold hover:bg-gray-200 transition-all"
+        className="bg-white text-green-700 px-6 py-2 rounded-full text-lg font-semibold hover:bg-gray-200 transition-all"
       >
         {isLoggedin ? 'Go to Dashboard' : 'Get Started'}
       </button>

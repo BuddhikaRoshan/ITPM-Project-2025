@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Text and Voice-Enabled Expense and Income Management with Smart Analytics",
   "main": "index.js",
-  "type":"module",
+  "type": "module",
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js"
@@ -17,6 +17,7 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.14.2",
     "mongoose": "^8.10.1",
     "nodemailer": "^6.10.0",
     "nodemon": "^3.1.9"
