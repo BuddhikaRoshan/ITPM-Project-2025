@@ -2,70 +2,81 @@ import React, { useState } from "react";
 import { FaHome, FaCalendarAlt, FaCog, FaUser, FaSignOutAlt } from "react-icons/fa";
 import { FiSend, FiMic } from "react-icons/fi";
 import { useNavigate, Routes, Route } from "react-router-dom";
-import Footer from "../components/Footer"; // Make sure to create this component or remove it if not needed
+import Footer from "../components/Footer"; // Ensure this component exists
+import wallpaper from "../assets/bg_img.png"; // Use your background image
 
-// Page components
-const HomePage = () => <div className="p-8 text-white">Home Page</div>;
-const CalendarPage = () => <div className="p-8 text-white">Calendar Page</div>;
-const SettingsPage = () => <div className="p-8 text-white">Settings Page</div>;
-const ProfilePage = () => <div className="p-8 text-white">Profile Page</div>;
+// Page Components for Routes
+const HomePage = () => (
+  <div className="p-10 text-gray-200 text-center text-3xl">
+    Welcome to MyFinanceMate
+  </div>
+);
+const CalendarPage = () => (
+  <div className="p-10 text-gray-200 text-center text-3xl">
+    Your Calendar
+  </div>
+);
+const SettingsPage = () => (
+  <div className="p-10 text-gray-200 text-center text-3xl">
+    Settings
+  </div>
+);
+const ProfilePage = () => (
+  <div className="p-10 text-gray-200 text-center text-3xl">
+    Profile Information
+  </div>
+);
 
-// Chat Interface Component
+// Chat Interface Component with improved alignment
 const ChatInterface = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [income, setIncome] = useState(0);
   const [expense, setExpense] = useState(0);
-  const [awaitingAmount, setAwaitingAmount] = useState(null); // Tracks if we're waiting for an amount (income/expense)
+  const [awaitingAmount, setAwaitingAmount] = useState(null);
 
   const botResponse = (userMessage) => {
     const lowerCaseMessage = userMessage.toLowerCase();
-
     if (lowerCaseMessage.includes("hello")) {
-      return "Hi there! How can I assist you today? 😊";
+      return "Hello! How can I assist you with your finances today? 😊";
     }
-
     if (lowerCaseMessage.includes("income")) {
       setAwaitingAmount("income");
-      return "Please provide the amount for the income.";
+      return "Please enter the income amount.";
     }
-
     if (lowerCaseMessage.includes("expense")) {
       setAwaitingAmount("expense");
-      return "Please provide the amount for the expense.";
+      return "Please enter the expense amount.";
     }
-
     if (awaitingAmount) {
       const amount = parseFloat(userMessage);
       if (isNaN(amount)) {
-        return "Please enter a valid number.";
+        return "That doesn't look like a valid number. Try again!";
       }
-
       if (awaitingAmount === "income") {
-        setIncome((prevIncome) => prevIncome + amount);
+        setIncome(prev => prev + amount);
         setAwaitingAmount(null);
-        return `Income updated by $${amount}.`;
+        return `Income increased by $${amount.toFixed(2)}`;
       }
-
       if (awaitingAmount === "expense") {
-        setExpense((prevExpense) => prevExpense + amount);
+        setExpense(prev => prev + amount);
         setAwaitingAmount(null);
-        return `Expense updated by $${amount}.`;
+        return `Expense increased by $${amount.toFixed(2)}`;
       }
     }
-
-    return "I'm just a simple chatbot. Ask me anything!";
+    return "I'm here to help! Try saying 'hello' or type income/expense.";
   };
 
   const handleSendMessage = () => {
     if (!input.trim()) return;
-    const newMessages = [...messages, { text: input, sender: "user" }];
+    const userMsg = { text: input, sender: "user" };
+    const newMessages = [...messages, userMsg];
     setMessages(newMessages);
     setInput("");
 
     setTimeout(() => {
-      const botReply = botResponse(input);
-      setMessages([...newMessages, { text: botReply, sender: "bot" }]);
+      const reply = botResponse(input);
+      setMessages(prev => [...prev, { text: reply, sender: "bot" }]);
     }, 500);
   };
 
@@ -74,23 +85,24 @@ const ChatInterface = () => {
       alert("Your browser doesn't support speech recognition!");
       return;
     }
-
     const recognition = new window.webkitSpeechRecognition();
     recognition.lang = "en-US";
-    recognition.continuous = false; // Stop after one sentence
-    recognition.interimResults = false; // Only final results
+    recognition.continuous = false;
+    recognition.interimResults = false;
 
     recognition.start();
 
     recognition.onresult = (event) => {
       const voiceMessage = event.results[0][0].transcript;
-      setInput(voiceMessage); // Update the input field with the voice message
-      handleSendMessage(); // Automatically send the voice message
+      setInput(voiceMessage);
+      setTimeout(() => {
+        handleSendMessage();
+      }, 150);
     };
 
     recognition.onerror = (event) => {
       console.error("Speech recognition error:", event.error);
-      alert("Speech recognition failed. Please try again.");
+      alert("An error occurred with speech recognition. Try again.");
     };
 
     recognition.onend = () => {
@@ -99,52 +111,64 @@ const ChatInterface = () => {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto bg-gray-900 text-white rounded-lg shadow-lg p-4 flex flex-col h-[600px] my-8">
-      {/* Expense and Income Cards */}
-      <div className="flex justify-between mb-4 space-x-4">
-        <div className="bg-gradient-to-r from-teal-500 to-blue-600 rounded-lg p-6 w-1/2">
-          <div className="text-white text-lg font-semibold">Income</div>
-          <div className="text-3xl mt-2">${income.toFixed(2)}</div>
+    <div className="relative max-w-2xl mx-auto rounded-2xl shadow-2xl overflow-hidden h-[600px] my-8 bg-white/10 backdrop-blur-lg flex flex-col">
+      {/* Background Overlay */}
+      <div
+        className="absolute inset-0 bg-cover bg-center opacity-20"
+        style={{ backgroundImage: `url(${wallpaper})` }}
+      ></div>
+
+      {/* Income & Expense Cards */}
+      <div className="relative z-10 flex justify-center gap-4 px-8 pt-6 pb-4">
+        <div className="flex-1 max-w-[45%] bg-gradient-to-br from-green-700 to-green-500 p-4 rounded-xl shadow-xl text-center">
+          <div className="text-base font-semibold text-gray-50">Income</div>
+          <div className="mt-1 text-2xl font-bold text-white">${income.toFixed(2)}</div>
         </div>
-        <div className="bg-gradient-to-r from-red-500 to-orange-600 rounded-lg p-6 w-1/2">
-          <div className="text-white text-lg font-semibold">Expense</div>
-          <div className="text-3xl mt-2">${expense.toFixed(2)}</div>
+        <div className="flex-1 max-w-[45%] bg-gradient-to-br from-red-700 to-red-500 p-4 rounded-xl shadow-xl text-center">
+          <div className="text-base font-semibold text-gray-50">Expense</div>
+          <div className="mt-1 text-2xl font-bold text-white">${expense.toFixed(2)}</div>
         </div>
       </div>
 
-      {/* Chat Messages */}
-      <div className="flex-grow overflow-y-auto p-2 space-y-3">
+      {/* Chat Messages Display */}
+      <div className="relative z-10 flex-1 p-4 overflow-y-auto space-y-4">
         {messages.map((msg, index) => (
           <div
             key={index}
-            className={`p-3 rounded-lg max-w-[80%] ${msg.sender === "user" ? "bg-teal-500 self-end text-right" : "bg-gray-700 self-start"}`}
+            className={`max-w-[75%] p-3 rounded-xl shadow transition-transform duration-300 ${
+              msg.sender === "user"
+                ? "self-end bg-blue-500 text-white text-right"
+                : "self-start bg-gray-600 text-gray-100 text-left"
+            }`}
           >
             {msg.text}
           </div>
         ))}
       </div>
 
-      {/* Input Area */}
-      <div className="flex items-center space-x-3 border-t border-gray-700 p-2">
+      {/* Message Input Area */}
+      <div className="relative z-10 px-4 py-3 border-t border-gray-700 flex items-center bg-gray-800">
         <input
           type="text"
-          className="flex-1 p-3 rounded-lg bg-gray-800 text-white outline-none focus:ring-2 focus:ring-blue-400"
-          placeholder="Type a message..."
+          className="flex-1 py-2 px-4 rounded-full bg-gray-700 text-gray-300 placeholder-gray-400 outline-none focus:ring-2 focus:ring-indigo-500 transition"
+          placeholder="Type your message..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
         />
         <button
           onClick={handleSendMessage}
-          className="p-4 bg-blue-600 hover:bg-blue-700 rounded-xl transition-colors"
+          className="ml-3 p-3 bg-indigo-600 rounded-full hover:bg-indigo-700 transition focus:ring-2 focus:ring-indigo-500"
           aria-label="Send message"
+          title="Send message"
         >
           <FiSend className="text-white text-xl" />
         </button>
         <button
           onClick={handleVoiceInput}
-          className="p-4 bg-green-600 hover:bg-green-700 rounded-xl transition-colors"
+          className="ml-2 p-3 bg-green-600 rounded-full hover:bg-green-700 transition focus:ring-2 focus:ring-green-500"
           aria-label="Voice input"
+          title="Voice input"
         >
           <FiMic className="text-white text-xl" />
         </button>
@@ -153,71 +177,78 @@ const ChatInterface = () => {
   );
 };
 
-// Main Chatbot Component
+// Main Chatbot Component with Improved Sidebar & Header Alignment
 const Chatbot = () => {
   const navigate = useNavigate();
 
   const logout = () => {
     console.log("User logged out");
-    navigate("/"); // Redirect to home or login page
+    navigate("/"); // Adjust the path as required
   };
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-900">
-      {/* Header Navigation */}
-      <div className="bg-gradient-to-r from-teal-600 to-blue-700 p-6 flex justify-between items-center shadow-lg">
-        <div className="text-white font-bold text-xl cursor-pointer" onClick={() => navigate('/')}>
+      {/* Header */}
+      <header className="bg-gradient-to-r from-purple-800 to-indigo-700 p-6 shadow-lg">
+        <div
+          className="text-white font-extrabold text-3xl tracking-wide cursor-pointer"
+          onClick={() => navigate("/")}
+        >
           MyFinanceMate
         </div>
-      </div>
+      </header>
 
       <div className="flex flex-1">
-        {/* Left Side Menu */}
-        <div className="w-20 bg-gray-800 flex flex-col items-center py-6 space-y-8">
+        {/* Sidebar Navigation */}
+        <nav className="w-20 bg-gray-800 flex flex-col items-center py-8 space-y-6 shadow-xl">
           <button
-            className="p-3 text-white hover:bg-gray-700 rounded-lg"
-            onClick={() => navigate('/')}
+            className="p-3 text-gray-300 hover:bg-gray-700 rounded-xl transition-colors"
+            onClick={() => navigate("/")}
+            title="Home"
           >
             <FaHome className="text-2xl" />
           </button>
           <button
-            className="p-3 text-white hover:bg-gray-700 rounded-lg"
-            onClick={() => navigate('/calendar')}
+            className="p-3 text-gray-300 hover:bg-gray-700 rounded-xl transition-colors"
+            onClick={() => navigate("/calendar")}
+            title="Calendar"
           >
             <FaCalendarAlt className="text-2xl" />
           </button>
           <button
-            className="p-3 text-white hover:bg-gray-700 rounded-lg"
-            onClick={() => navigate('/settings')}
+            className="p-3 text-gray-300 hover:bg-gray-700 rounded-xl transition-colors"
+            onClick={() => navigate("/settings")}
+            title="Settings"
           >
             <FaCog className="text-2xl" />
           </button>
-
-          {/* Profile and Logout Buttons */}
           <button
-            className="p-3 text-white hover:bg-gray-700 rounded-lg mt-auto"
-            onClick={() => navigate('/profile')}
+            className="mt-auto p-3 text-gray-300 hover:bg-gray-700 rounded-xl transition-colors"
+            onClick={() => navigate("/profile")}
+            title="Profile"
           >
             <FaUser className="text-2xl" />
           </button>
           <button
-            className="p-3 text-white hover:bg-gray-700 rounded-lg"
+            className="p-3 text-gray-300 hover:bg-gray-700 rounded-xl transition-colors"
             onClick={logout}
+            title="Logout"
           >
             <FaSignOutAlt className="text-2xl" />
           </button>
-        </div>
+        </nav>
 
         {/* Main Content Area */}
-        <div className="flex-1 overflow-y-auto">
+        <main className="flex-1 overflow-y-auto p-4">
           <Routes>
             <Route path="/" element={<ChatInterface />} />
             <Route path="/calendar" element={<CalendarPage />} />
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/profile" element={<ProfilePage />} />
           </Routes>
-        </div>
+        </main>
       </div>
+
       <Footer />
     </div>
   );

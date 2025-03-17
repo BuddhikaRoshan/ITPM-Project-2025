@@ -1,14 +1,14 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { FaRobot, FaChartLine, FaMicrophone, FaComments, FaRocket, FaGlobe, FaShieldAlt, FaWallet, FaCogs, FaSyncAlt, FaLightbulb, FaBrain, FaGamepad } from "react-icons/fa";
-import logo from "../assets/logo.png";
+import logo from "../assets/about.mp4";
 import Header from "../components/Header";
 
 const AboutUs = () => {
   return (
-  
+
     <div className="min-h-screen bg-gray-900 text-white transition-colors duration-500">
-          <Header />
+      <Header />
       <div className="container mx-auto px-4 py-12">
         <motion.div
           className="bg-gray-800 p-8 rounded-2xl shadow-lg max-w-8xl mx-auto text-center transition-colors duration-500"
@@ -16,14 +16,16 @@ const AboutUs = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          {/* Logo at the top */}
-          <motion.img
+          <motion.video
             src={logo}
-            alt="MyFinanceMate Logo"
-            className="h-16 mx-auto mb-4"
+            autoPlay
+            loop
+            muted
+            className="h-16 mx-auto mb-4 rounded-lg"
             whileHover={{ scale: 1.1 }}
             transition={{ type: "spring", stiffness: 300 }}
           />
+
 
           <h1 className="text-4xl font-bold mb-6">About MyFinanceMate</h1>
           <p className="text-gray-300 mb-8 text-lg">

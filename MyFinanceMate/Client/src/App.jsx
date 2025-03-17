@@ -30,7 +30,7 @@ const App = () => {
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/chatbot" element={<Chatbot />} />
-          <Route path="/calendar" element={<Calendar />} />
+          <Route path="/Calendar" element={<Calendar  />} />
           <Route path="/settings" element={<Settings />} />
         </Route>
       </Routes>

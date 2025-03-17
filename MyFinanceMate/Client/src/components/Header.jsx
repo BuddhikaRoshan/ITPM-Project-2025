@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FiUser, FiLogOut } from "react-icons/fi";
-import logo from "../assets/logo.png";
+import logo from "../assets/favicon.svg";
 import { AppContent } from "../context/AppContext";
 
 const Header = () => {
